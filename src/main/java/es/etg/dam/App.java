@@ -1,5 +1,7 @@
 package es.etg.dam;
 
+import java.io.FileWriter;
+
 public class App {
 
     public static final String COMANDO_1 = "ps";
@@ -13,13 +15,18 @@ public class App {
     public static final String RESPUESTA = "Resultado escrito correctamente";
 
     public static void main(String[] args) throws Exception {
-        StringBuilder salida = new StringBuilder();
+        limpiarArchivo(RUTA);
+
         for (String comando : COMANDOS) {
             Proceso exec = new Comando(comando);
-            salida.append(exec.lanzar());
+            String salida = exec.lanzar();
+            Comando.escribir(RUTA, salida, comando);
         }
 
-        Comando.escribir(RUTA, salida.toString());
         System.out.println(RESPUESTA);
+    }
+
+    public static void limpiarArchivo(String ruta) throws Exception {
+        new FileWriter(ruta, false).close();
     }
 }
