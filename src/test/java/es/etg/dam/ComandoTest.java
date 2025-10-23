@@ -1,5 +1,8 @@
 package es.etg.dam;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
@@ -9,13 +12,20 @@ public class ComandoTest {
     public void testLanzar() throws Exception {
         Proceso p = new Comando("echo hola buenas");
         String resultado = p.lanzar();
-        assertEquals("## Proceso : echo hola buenas \n hola buenas", resultado);
+        assertEquals("hola buenas", resultado.trim());
     }
 
     @Test
     public void testEscribir() throws Exception {
-        String ruta = "src/test/resources/test_informe.md";
-        Comando.escribir(ruta, "hola", "test");
+        String ruta = "src/main/resources/test_informe.md";
+        App.limpiarArchivo(ruta);
 
+        Comando.escribir(ruta, "hola", "echo hola");
+        String salida;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+            salida = br.readLine();
+        }
+        assertEquals("## Proceso : echo hola", salida.trim());
     }
 }
